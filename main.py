@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 from math import log2
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
 
 
 # Function to calculate entropy
@@ -106,6 +109,7 @@ def classify(tree, test_data):
     return predictions
 
 
+
 def main():
     # Training Dataset
     restaurant_data = np.array([
@@ -189,3 +193,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/build-decision-tree', methods=['POST'])
+def build_decision_tree():
+    return render_template('decision_tree.html')
+
+
+@app.route('/predict')
+def predict():
+    return render_template('decision_tree.html')
