@@ -8,7 +8,7 @@
 <body>
     <h1 class="ml-5 mt-4 mb-4">Decision Tree Classifier</h1>
     <div class="container d-flex flex-row w-100">
-        <div class="col-6">
+        <div class="col-4">
             <form id="upload-data-form" class="mb-4">
             <div class="form-group">
                 <label for="data-file">Upload your data:</label>
@@ -27,23 +27,99 @@
 
             <button id="build-tree-button" class="btn btn-primary mb-4">Build Decision Tree</button>
 
+             <form id="unseen-instance-form" class="mb-4">
+                <label for="data-file">Predict unseen instance:</label>
+                <div class="form-group">
+                    <label for="alternate">Alternate:</label>
+                    <select class="form-control" id="alternate" name="alternate">
+                        <option>yes</option>
+                        <option>no</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bar">Bar:</label>
+                    <select class="form-control" id="bar" name="bar">
+                        <option>yes</option>
+                        <option>no</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Fri/Sun">Fri/Sun:</label>
+                    <select class="form-control" id="Fri/Sun" name="Fri/Sun">
+                        <option>yes</option>
+                        <option>no</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hungry">Hungry:</label>
+                    <select class="form-control" id="hungry" name="hungry">
+                        <option>yes</option>
+                        <option>no</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="patrons">Patrons:</label>
+                    <select class="form-control" id="patrons" name="patrons">
+                        <option>some</option>
+                        <option>full</option>
+                        <option>none</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <select class="form-control" id="price" name="price">
+                        <option>$$$</option>
+                        <option>$$</option>
+                        <option>$</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rain">Rain:</label>
+                    <select class="form-control" id="rain" name="rain">
+                        <option>yes</option>
+                        <option>no</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="res">Res:</label>
+                    <select class="form-control" id="res" name="res">
+                        <option>yes</option>
+                        <option>no</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select class="form-control" id="type" name="type">
+                        <option>french</option>
+                        <option>thai</option>
+                        <option>burger</option>
+                        <option>italian</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="wait-est">Wait-Est:</label>
+                    <select class="form-control" id="wait-est" name="wait-est">
+                        <option>0-10</option>
+                        <option>10-30</option>
+                        <option>30-60</option>
+                        <option>>60</option>
+                    </select>
+                </div>
+            </form>
+
+            <button id="predict-unseen-instance-button" class="btn btn-primary mb-4">Run Unseen Data</button>
+        </div>
+
+        <div  class="col-8 ml-5">
+
             <div id="tree-visualization" class="mb-4">
                 <!-- D3.js visualization will be inserted here -->
             </div>
-        </div>
+                <label for="data-file">Tree visualisation:</label>
 
-        <div  class="col-6 ml-5">
-             <form id="upload-unseen-data-form" class="mb-4">
-                <div class="form-group">
-                    <label for="unseen-data-file">Upload unseen data:</label>
-                    <input type="file" class="form-control-file" id="unseen-data-file" name="unseen-data-file">
-                </div>
-             </form>
 
-            <button id="run-unseen-data-button" class="btn btn-primary mb-4">Run Unseen Data</button>
-
-            <div id="predictions" class="mb-4">
-                <!-- Predictions will be displayed here -->
+            <div id="prediction" class="mb-4">
+                <label for="data-file">Instance prediction:</label>
             </div>
         </div>
     </div>
@@ -51,15 +127,26 @@
     <!-- Include Bootstrap JS and its dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-   <script>
+    <script>
   // Wait for the document to be ready
   document.addEventListener('DOMContentLoaded', function() {
     // Get references to the necessary elements
     var uploadDataForm = document.getElementById('upload-data-form');
     var selectTargetForm = document.getElementById('select-target-form');
     var buildTreeButton = document.getElementById('build-tree-button');
-    var uploadUnseenDataForm = document.getElementById('upload-unseen-data-form');
-    var runUnseenDataButton = document.getElementById('run-unseen-data-button');
+    var predictUnseenInstanceButton = document.getElementById('predict-unseen-instance-button');
+
+    // Get references to the new form fields
+    var alternate = document.getElementById('alternate');
+    var bar = document.getElementById('bar');
+    var friSun = document.getElementById('Fri/Sun');
+    var hungry = document.getElementById('hungry');
+    var patrons = document.getElementById('patrons');
+    var price = document.getElementById('price');
+    var rain = document.getElementById('rain');
+    var res = document.getElementById('res');
+    var type = document.getElementById('type');
+    var waitEst = document.getElementById('wait-est');
 
     // Add event listener for the Build Decision Tree button
     buildTreeButton.addEventListener('click', function(event) {
@@ -69,10 +156,10 @@
     });
 
     // Add event listener for the Run Unseen Data button
-    runUnseenDataButton.addEventListener('click', function(event) {
+    predictUnseenInstanceButton.addEventListener('click', function(event) {
       event.preventDefault();
       // Perform the desired action when the button is clicked
-      console.log('Run Unseen Data button clicked');
+      console.log('Predict Unseen Instance button clicked');
     });
 
     // Add event listener for the file upload in the data form
@@ -82,20 +169,46 @@
       console.log('Data file uploaded:', file.name);
     });
 
-    // Add event listener for the file upload in the unseen data form
-    uploadUnseenDataForm.addEventListener('change', function(event) {
-      var file = event.target.files[0];
-      // Perform the desired action with the uploaded file
-      console.log('Unseen data file uploaded:', file.name);
-    });
-
     // Add event listener for the target column selection
     selectTargetForm.addEventListener('change', function(event) {
       var selectedColumn = event.target.value;
       // Perform the desired action with the selected target column
       console.log('Selected target column:', selectedColumn);
     });
+
+    // Add event listeners for the new form fields
+    alternate.addEventListener('change', function(event) {
+      console.log('Alternate:', event.target.value);
+    });
+    bar.addEventListener('change', function(event) {
+      console.log('Bar:', event.target.value);
+    });
+    friSun.addEventListener('change', function(event) {
+      console.log('Fri/Sun:', event.target.value);
+    });
+    hungry.addEventListener('change', function(event) {
+      console.log('Hungry:', event.target.value);
+    });
+    patrons.addEventListener('change', function(event) {
+      console.log('Patrons:', event.target.value);
+    });
+    price.addEventListener('change', function(event) {
+      console.log('Price:', event.target.value);
+    });
+    rain.addEventListener('change', function(event) {
+      console.log('Rain:', event.target.value);
+    });
+    res.addEventListener('change', function(event) {
+      console.log('Res:', event.target.value);
+    });
+    type.addEventListener('change', function(event) {
+      console.log('Type:', event.target.value);
+    });
+    waitEst.addEventListener('change', function(event) {
+      console.log('Wait-Est:', event.target.value);
+    });
   });
 </script>
+
 </body>
 </html>

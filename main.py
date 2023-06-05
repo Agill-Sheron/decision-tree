@@ -200,11 +200,23 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/upload-data', methods=['POST'])
+def upload_data():
+    if 'file' not in request.files:
+        return 'No file part'
+    file = request.files['file']
+    # TODO: Add code to handle the uploaded file
+    return 'File uploaded successfully'
+
+
+@app.route('/select-target', methods=['POST'])
+def select_target():
+    target_column = request.form.get('target_column')
+    # TODO: Add code to handle the selected target column
+    return 'Target column selected successfully'
+
+
 @app.route('/build-decision-tree', methods=['POST'])
-def build_decision_tree():
-    return render_template('decision_tree.html')
-
-
-@app.route('/predict')
-def predict():
-    return render_template('decision_tree.html')
+def build_decision_tree_route():
+    # TODO: Add code to build the decision tree
+    return render_template('decision_tree.html', decision_tree=decision_tree)
