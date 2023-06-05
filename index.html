@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decision Tree Classifier</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    <h1 class="ml-5 mt-4 mb-4">Decision Tree Classifier</h1>
+    <div class="container d-flex flex-row w-100">
+        <div class="col-6">
+            <form id="upload-data-form" class="mb-4">
+            <div class="form-group">
+                <label for="data-file">Upload your data:</label>
+                <input type="file" class="form-control-file" id="data-file" name="data-file">
+            </div>
+        </form>
+
+            <form id="select-target-form" class="mb-4">
+                <div class="form-group">
+                    <label for="target-column">Select target column:</label>
+                    <select class="form-control" id="target-column" name="target-column">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+            </form>
+
+            <button id="build-tree-button" class="btn btn-primary mb-4">Build Decision Tree</button>
+
+            <div id="tree-visualization" class="mb-4">
+                <!-- D3.js visualization will be inserted here -->
+            </div>
+        </div>
+
+        <div  class="col-6 ml-5">
+             <form id="upload-unseen-data-form" class="mb-4">
+                <div class="form-group">
+                    <label for="unseen-data-file">Upload unseen data:</label>
+                    <input type="file" class="form-control-file" id="unseen-data-file" name="unseen-data-file">
+                </div>
+             </form>
+
+            <button id="run-unseen-data-button" class="btn btn-primary mb-4">Run Unseen Data</button>
+
+            <div id="predictions" class="mb-4">
+                <!-- Predictions will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+  // Wait for the document to be ready
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the necessary elements
+    var uploadDataForm = document.getElementById('upload-data-form');
+    var selectTargetForm = document.getElementById('select-target-form');
+    var buildTreeButton = document.getElementById('build-tree-button');
+    var uploadUnseenDataForm = document.getElementById('upload-unseen-data-form');
+    var runUnseenDataButton = document.getElementById('run-unseen-data-button');
+
+    // Add event listener for the Build Decision Tree button
+    buildTreeButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      // Perform the desired action when the button is clicked
+      console.log('Build Decision Tree button clicked');
+    });
+
+    // Add event listener for the Run Unseen Data button
+    runUnseenDataButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      // Perform the desired action when the button is clicked
+      console.log('Run Unseen Data button clicked');
+    });
+
+    // Add event listener for the file upload in the data form
+    uploadDataForm.addEventListener('change', function(event) {
+      var file = event.target.files[0];
+      // Perform the desired action with the uploaded file
+      console.log('Data file uploaded:', file.name);
+    });
+
+    // Add event listener for the file upload in the unseen data form
+    uploadUnseenDataForm.addEventListener('change', function(event) {
+      var file = event.target.files[0];
+      // Perform the desired action with the uploaded file
+      console.log('Unseen data file uploaded:', file.name);
+    });
+
+    // Add event listener for the target column selection
+    selectTargetForm.addEventListener('change', function(event) {
+      var selectedColumn = event.target.value;
+      // Perform the desired action with the selected target column
+      console.log('Selected target column:', selectedColumn);
+    });
+  });
+</script>
+</body>
+</html>
