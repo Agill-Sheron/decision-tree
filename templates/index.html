@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Decision Tree Classifier</title>
     <!-- Include Bootstrap CSS -->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Include Bootstrap JS and its dependencies -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
 </head>
 <body>
     <h1 class="ml-5 mt-4 mb-4">Decision Tree Classifier</h1>
@@ -123,10 +128,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Include Bootstrap JS and its dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
   // Wait for the document to be ready
   document.addEventListener('DOMContentLoaded', function() {
@@ -162,12 +163,48 @@
       console.log('Predict Unseen Instance button clicked');
     });
 
-    // Add event listener for the file upload in the data form
-    uploadDataForm.addEventListener('change', function(event) {
-      var file = event.target.files[0];
-      // Perform the desired action with the uploaded file
-      console.log('Data file uploaded:', file.name);
+        // Get reference to the file input element
+    var dataFileInput = document.getElementById('data-file');
+
+    // Add event listener for the file input change
+    dataFileInput.addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        // Perform the desired action with the uploaded file
+        console.log('Data file uploaded:', file.name);
+
+        // Create a new FormData instance
+        var formData = new FormData();
+        // Append the file to the FormData instance
+        formData.append('file', file);
+
+        // Send the file to the server
+        $.ajax({
+            url: '/upload-data',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Assume that the server returns a list of column names
+                var columns = response;
+                console.log(response)
+                // Get the select element
+                var select = document.getElementById('target-column');
+                // Remove any existing options
+                while (select.firstChild) {
+                    select.removeChild(select.firstChild);
+                }
+                // Add an option for each column
+                for (var i = 0; i < columns.length; i++) {
+                    var option = document.createElement('option');
+                    option.value = columns[i];
+                    option.text = columns[i];
+                    select.appendChild(option);
+                }
+            }
+        });
     });
+
 
     // Add event listener for the target column selection
     selectTargetForm.addEventListener('change', function(event) {

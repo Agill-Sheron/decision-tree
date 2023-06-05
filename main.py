@@ -45,7 +45,6 @@ class TreeNode:
 
 
 def build_decision_tree(dataframe, target_values, unused_features):
-
     # Base case: if there are no more unused features, return a leaf node
     if len(unused_features) == 0:
         return TreeNode(feature_name="Leaf", feature_value=Counter(target_values))
@@ -107,7 +106,6 @@ def classify(tree, test_data):
     predictions = [classify_instance(tree, instance) for instance in test_data_dicts]
 
     return predictions
-
 
 
 def main():
@@ -191,32 +189,40 @@ def main():
         print(pred)
 
 
-if __name__ == "__main__":
-    main()
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
 @app.route('/upload-data', methods=['POST'])
-def upload_data():
+def upload_file():
     if 'file' not in request.files:
         return 'No file part'
     file = request.files['file']
-    # TODO: Add code to handle the uploaded file
-    return 'File uploaded successfully'
+    if file.filename == '':
+        return 'No selected file'
+    if file:
+        df = pd.read_csv(file)
+        columns = df.columns.tolist()
+        return columns
 
 
 @app.route('/select-target', methods=['POST'])
 def select_target():
     target_column = request.form.get('target_column')
-    # TODO: Add code to handle the selected target column
+    global target_values
+    target_values = df[target_column]
+    df.drop(target_column, axis=1, inplace=True)
     return 'Target column selected successfully'
 
 
 @app.route('/build-decision-tree', methods=['POST'])
 def build_decision_tree_route():
-    # TODO: Add code to build the decision tree
+    global decision_tree
+    feature_names = list(df.columns)
+    decision_tree = build_decision_tree(df, target_values, feature_names)
     return render_template('decision_tree.html', decision_tree=decision_tree)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
