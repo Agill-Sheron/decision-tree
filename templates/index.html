@@ -116,12 +116,10 @@
         </div>
 
         <div  class="col-8 ml-5">
-
+            <label for="data-file">Tree visualisation:</label>
             <div id="tree-visualization" class="mb-4">
-                <!-- D3.js visualization will be inserted here -->
-            </div>
-                <label for="data-file">Tree visualisation:</label>
 
+            </div>
 
             <div id="prediction" class="mb-4">
                 <label for="data-file">Instance prediction:</label>
@@ -154,6 +152,29 @@
       event.preventDefault();
       // Perform the desired action when the button is clicked
       console.log('Build Decision Tree button clicked');
+     var target_column = document.getElementById('target-column').value;
+
+    $.ajax({
+        url: '/build-decision-tree',
+        type: 'POST',
+        data: JSON.stringify({ 'target_column': target_column }),
+        contentType: 'application/json',
+        processData: false,
+        success: function() {
+            // Create a new image element
+            var img = document.createElement('img');
+            img.src = '/static/decision_tree.png';
+
+            // Remove any existing images from the tree visualization div
+            var treeVisualizationDiv = document.getElementById('tree-visualization');
+            while (treeVisualizationDiv.firstChild) {
+                treeVisualizationDiv.removeChild(treeVisualizationDiv.firstChild);
+            }
+
+            // Append the new image to the tree visualization div
+            treeVisualizationDiv.appendChild(img);
+        }
+    });
     });
 
     // Add event listener for the Run Unseen Data button
