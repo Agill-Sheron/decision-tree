@@ -105,6 +105,26 @@ def classify(tree, test_data):
     return predictions
 
 
+def print_tree(node, indent=""):
+    if node.feature_name == "Leaf":
+        if isinstance(node.feature_value, Counter):
+            # If the leaf node has multiple target values, print the count of each target value
+            print(indent + "Leaf:", dict(node.feature_value))
+        else:
+            # If the leaf node has a single target value, print the target value
+            print(indent + "Leaf:", node.feature_value)
+        return
+
+    # Print the current feature and split value
+    print(indent + node.feature_name + " < " + str(node.feature_value) + "?")
+
+    # Print the true branch recursively
+    print_tree(node.true_branch, indent + "  |")
+
+    # Print the false branch recursively
+    print_tree(node.false_branch, indent + "  |")
+
+
 def main():
     # Training Dataset
     restaurant_data = np.array([
@@ -141,7 +161,7 @@ def main():
 
     # Build the decision tree
     decision_tree = build_decision_tree(features, target_values, feature_names)
-
+    print_tree(decision_tree, "")
     # Mock test data
     mock_data = pd.DataFrame([
         {'alternate': 'yes', 'bar': 'no', 'Fri/Sun': 'no', 'hungry': 'yes', 'patrons': 'some', 'price': '$$$',

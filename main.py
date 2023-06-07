@@ -5,7 +5,6 @@ from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier
 import json
 
-
 app = Flask(__name__, static_folder='static')
 
 
@@ -40,16 +39,20 @@ def build_decision_tree_route():
     # Set the target_values variable
     target_values = df[target_column]
 
+    global df_features
     # Drop the target column from the dataframe
     df_features = df.drop(target_column, axis=1)
 
     # Convert categorical variable into dummy/indicator variables
     df_features = pd.get_dummies(df_features)
 
+
+    global feature_names
     # Get the list of feature names
     feature_names = list(df_features.columns)
 
     # Build the decision tree using sklearn's DecisionTreeClassifier
+    global decision_tree
     decision_tree = DecisionTreeClassifier()
     decision_tree.fit(df_features, target_values)
 
@@ -62,6 +65,28 @@ def build_decision_tree_route():
     graph.render("static/decision_tree")
 
     return send_file("static/decision_tree.png", mimetype='image/png')
+
+
+@app.route('/predict-unseen-instance', methods=['POST'])
+def predict_unseen_instance():
+    # Get the form field values from the request
+    data = request.get_json()
+    # Create a new instance with these values
+    instance = pd.DataFrame([data])
+
+    # Convert categorical variable into dummy/indicator variables
+    instance = pd.get_dummies(instance)
+
+    # Ensure the instance has the same features as the training data
+    for column in df_features.columns:
+        if column not in instance.columns:
+            instance[column] = 0
+
+    # Use the decision tree to predict the target value for this instance
+    prediction = decision_tree.predict(instance)
+
+    # Return the prediction
+    return jsonify({'prediction': int(prediction[0])})
 
 
 if __name__ == "__main__":

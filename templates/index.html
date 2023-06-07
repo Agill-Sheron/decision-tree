@@ -182,6 +182,31 @@
       event.preventDefault();
       // Perform the desired action when the button is clicked
       console.log('Predict Unseen Instance button clicked');
+        $.ajax({
+            url: '/predict-unseen-instance',
+            type: 'POST',
+            data: JSON.stringify({
+              'alternate': alternate.value,
+              'bar': bar.value,
+              'Fri/Sun': friSun.value,
+              'hungry': hungry.value,
+              'patrons': patrons.value,
+              'price': price.value,
+              'rain': rain.value,
+              'res': res.value,
+              'type': type.value,
+              'wait-est': waitEst.value
+            }),
+            contentType: 'application/json',
+            processData: false,
+            success: function(response) {
+              // Assume that the server returns a prediction
+              var prediction = response;
+              // Display the prediction in the prediction div
+              var predictionDiv = document.getElementById('prediction');
+              predictionDiv.textContent = 'Prediction: ' + prediction;
+            }
+        });
     });
 
         // Get reference to the file input element
