@@ -121,8 +121,9 @@
 
             </div>
 
+            <label for="data-file">Instance prediction:</label>
             <div id="prediction" class="mb-4">
-                <label for="data-file">Instance prediction:</label>
+
             </div>
         </div>
     </div>
@@ -202,9 +203,18 @@
             success: function(response) {
               // Assume that the server returns a prediction
               var prediction = response;
-              // Display the prediction in the prediction div
+
+              var text = document.createElement('div');
+              text.innerText = prediction.prediction
+                // Display the prediction in the prediction div
               var predictionDiv = document.getElementById('prediction');
-              predictionDiv.textContent = 'Prediction: ' + prediction;
+
+            while (predictionDiv.firstChild) {
+                predictionDiv.removeChild(predictionDiv.firstChild);
+            }
+
+            // Append the new image to the tree visualization div
+            predictionDiv.appendChild(text);
             }
         });
     });

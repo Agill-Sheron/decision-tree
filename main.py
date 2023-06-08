@@ -74,19 +74,29 @@ def predict_unseen_instance():
     # Create a new instance with these values
     instance = pd.DataFrame([data])
 
-    # Convert categorical variable into dummy/indicator variables
-    instance = pd.get_dummies(instance)
+    # Concatenate the instance with the original DataFrame and create dummy variables
+    df_with_instance = pd.concat([df, instance], ignore_index=True)
+    df_with_instance = pd.get_dummies(df_with_instance)
+
+    # Get the last row (the unseen instance)
+    instance = df_with_instance.iloc[-1]
 
     # Ensure the instance has the same features as the training data
     for column in df_features.columns:
-        if column not in instance.columns:
+        if column not in instance.index:
             instance[column] = 0
 
+    # Reorder the columns to match the training data
+    instance = instance[df_features.columns]
+
+    # Convert the instance into a DataFrame and set the feature names
+    instance_df = pd.DataFrame([instance], columns=df_features.columns)
+
     # Use the decision tree to predict the target value for this instance
-    prediction = decision_tree.predict(instance)
+    prediction = decision_tree.predict(instance_df)
 
     # Return the prediction
-    return jsonify({'prediction': int(prediction[0])})
+    return jsonify({'prediction': prediction[0]})
 
 
 if __name__ == "__main__":
